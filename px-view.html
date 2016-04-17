@@ -3,8 +3,11 @@
     siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
     'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
 -->
-<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
+<!-- Carbon Route and Carbon Locatiion are used for routing -->
+<link rel="import" href="../../bower_components/carbon-route/carbon-location.html" />
+<link rel="import" href="../../bower_components/carbon-route/carbon-route.html" />
 
 <!--
 Element providing solution to no problem in particular. As a simple, increments a counter when clicked.
@@ -21,15 +24,20 @@ Element providing solution to no problem in particular. As a simple, increments 
 <dom-module id="px-view">
   <link rel="import" type="css" href="css/px-view.css"/>
   <template>
-    <a on-click="handleClick" href="javascript:;">Click here to increment counter:</a>
-    <span>{{counterValue}}</span>
+    <carbon-location route="{{carbonLocationRoute}}" use-hash-as-path></carbon-location>
+    <carbon-route route="{{carbonLocationRoute}}" pattern="[[pattern]]" active="{{active}}"></carbon-route>
+    <template is="dom-if" if="{{active}}">
+      <h1>[[pattern]]</h1>
+      <hr/>
+    </template>
+    <!-- view element will be inserted here -->
   </template>
 </dom-module>
 
 <script>
   Polymer({
 
-    is: 'px-view', 
+    is: 'px-view',
 
     /**
          * Properties block, expose attribute values to the DOM via 'notify'
@@ -37,31 +45,135 @@ Element providing solution to no problem in particular. As a simple, increments 
          * @property properties
          * @type Object
          */
-    properties: {
-      counterValue: {
-        type: Number,
-        value: 0,
-        notify: true
-      }
-    },
+         properties: {
+             /**
+              *
+              * Set the 'preload' attribute on the <px-view> element and the components will be
+              * loaded immediately or
+              * lazy-loaded on demand. Lazy-loading is on by default to avoid unnecessary HTTP requests.
+              *
+              * @attribute preload
+              * @type Boolean
+              * @default false
+              */
+             preload: {
+               type: Boolean,
+               value: false
+             },
+             /**
+              *
+              * Status tracks a px-view component over it's lifecycle
+              * Steps: 'unloaded' -> 'loading' -> 'loaded' || 'failed' -> 'attached' -> 'hidden' || 'shown'
+              *
+              * @attribute status
+              * @type String
+              * @readonly
+              * @access public
+              */
+             status: {
+               type: String,
+               value: 'unloaded',
+               notify: true,
+               reflectToAttribute: true
+             },
+             /**
+              *
+              * elementTagName sets the name of the tag to attach to the DOM which must match component name
+              *
+              * @attribute elementTagName
+              * @type String
+              * @access public
+              */
+             elementTagName: {
+               type: String,
+               value: ""
+             },
+             /**
+              *
+              * elementHref defines relative URL path of web component html file
+              *
+              * @attribute elementHref
+              * @type String
+              * @access public
+              */
+             elementHref: {
+               type: String,
+               value: ""
+             },
+             /**
+              *
+              * The display property defines the value of the component's display property when view is shown
+              *
+              * @attribute elementHref
+              * @type String
+              * @access public
+              * @default 'block'
+              */
+             display: {
+               type: String,
+               value: "block"
+             }
+           },
 
-    /**
-         * Handles click on the element defined in 'on-click' on the template
-         *
-         * @method handleClick
-         */
-    handleClick: function(event, detail, sender) {
-      this.increment();
-    },
+           observers: [
+             '_checkStatus(status, active, preload, elementTagName, elementHref, display)'
+           ],
 
-    /**
-         * Increments the counter
-         *
-         * @method increment
-         */
-    increment: function() {
-      this.counterValue++;
-    }
+           viewElement: null, // Reference to the loaded view DOM element
+
+               // 'unloaded' -> 'loading' -> 'loaded' || 'failed' -> 'attached' -> 'hidden' || 'shown'
+               _checkStatus: function() {
+                 switch (this.status) {
+                   case 'unloaded':
+                     if (this.active || this.preload) {
+                       this._loadElement();
+                     };
+                     break;
+                   case 'loading':
+                     break;
+                   case 'loaded':
+                     if (this.active) {
+                       this._attachElement();
+                     };
+                     break;
+                   case 'attached':
+                     var newStatus = this.active ? 'shown' : 'hidden';
+                     this.set('status', newStatus);
+                     break;
+                   case 'shown':
+                     if (this.active) {
+                       this.viewElement.style.display = this.display;
+                     } else {
+                       this.set('status', 'hidden');
+                     }
+                     break;
+                   case 'hidden':
+                     if (!this.active) {
+                       this.viewElement.style.display = 'none';
+                     } else {
+                       this.set('status', 'shown');
+                     }
+                     break;
+                   default:
+                     console.log('px-view status has entered unknown state: ', this.status);
+                 };
+               },
+
+               _attachElement: function() {
+                 this.viewElement = document.createElement(this.elementTagName);
+                 this.appendChild(this.viewElement);
+                 this.set('status', 'attached');
+               },
+
+               _loadElement: function() {
+                 this.importHref(this.elementHref, function(e) {
+                   this.set('status', 'loaded');
+                 }, function(e) {
+                   console.log('Failure to load ' + this.elementHref);
+                   this.set('status', 'failed');
+                 });
+                 this.set('status', 'loading');
+               }
 
   });
 </script>
