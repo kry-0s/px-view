@@ -5,33 +5,30 @@
 -->
 <link rel="import" href="../polymer/polymer.html">
 
-<!-- Carbon Route and Carbon Locatiion are used for routing -->
-<link rel="import" href="../carbon-route/carbon-location.html" />
-<link rel="import" href="../carbon-route/carbon-route.html" />
-
-<!--
-Element providing solution to no problem in particular. As a simple, increments a counter when clicked.
-
-##### Usage
-
-    <px-view counter-value="1">Hi</px-view>
-
-@element px-view
-@blurb Element providing solution to no problem in particular.
-@homepage index.html
-@demo demo.html
--->
 <dom-module id="px-view">
-  <link rel="import" type="css" href="css/px-view.css"/>
   <template>
-    <carbon-location route="{{_route}}" use-hash-as-path></carbon-location>
-    <carbon-route route="{{_route}}" pattern="[[route]]" active="{{active}}"></carbon-route>
-    <!-- view element will be inserted here -->
+    <!-- insert element here -->
   </template>
   <script>
     Polymer({
+
       is: 'px-view',
+
       properties: {
+
+        /**
+         *
+         * Set the 'active' attribute on the <px-view> element to true and the components will be
+         * loaded and displayed
+         *
+         * @attribute preload
+         * @type Boolean
+         * @default false
+        */
+        active: {
+          type: Boolean,
+          value: false
+        },
         /**
          *
          * Set the 'preload' attribute on the <px-view> element and the components will be
