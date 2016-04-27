@@ -142,6 +142,7 @@
 
       _attachElement: function() {
         this._viewElement = document.createElement(this.elementTagName);
+        this._viewElement.id = this.elementTagName + '-' + Math.random().toString().substr(2,10);
         this.appendChild(this._viewElement);
         this.set('status', 'attached');
       },
