@@ -68,8 +68,7 @@
          * @access public
         */
         elementTagName: {
-          type: String,
-          value: ""
+          type: String
         },
         /**
          *
@@ -80,8 +79,7 @@
          * @access public
         */
         elementHref: {
-          type: String,
-          value: ""
+          type: String
         },
         /**
          *
@@ -150,9 +148,10 @@
 
       _loadElement: function() {
         this.set('status', 'loading');
+        console.log('this.elementHref', this.elementHref);
         this.importHref(this.elementHref, function(e) {
           this.set('status', 'loaded');
-        }, function(e) {
+        }, function(error) {
           console.log('Failure to load ' + this.elementHref);
           this.set('status', 'failed');
         });
