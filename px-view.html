@@ -151,11 +151,8 @@
       _loadElement: function() {
         this.set('status', 'loading');
         var link = this.importHref(this.elementHref, function(e) {
-          console.log(e);
-          console.log(link);
           this.set('status', 'loaded');
         }, function(error) {
-          console.log('Failure to load ' + this.elementHref);
           this.set('status', 'failed');
         });
       },
