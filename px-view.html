@@ -3,7 +3,7 @@
     siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
     'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="/bower_components/polymer/polymer.html">
 
 <dom-module id="px-view">
   <template>
@@ -67,8 +67,9 @@
          * @type String
          * @access public
         */
-        elementTagName: {
-          type: String
+        _elementTagName: {
+          type: String,
+          computed: '_computeElementTagName(elementHref)'
         },
         /**
          *
@@ -97,7 +98,7 @@
       },
 
       observers: [
-        '_checkStatus(status, active, preload, elementTagName, elementHref, display)'
+        '_checkStatus(status, active, preload, elementHref, display, _elementTagName)'
       ],
 
       _viewElement: null, // Reference to the loaded view DOM element
@@ -141,8 +142,8 @@
       },
 
       _attachElement: function() {
-        this._viewElement = document.createElement(this.elementTagName);
-        this._viewElement.id = this.elementTagName + '-' + new Date().getTime();
+        this._viewElement = document.createElement(this._elementTagName);
+        this._viewElement.id = this._elementTagName + '-' + new Date().getTime();
         this.appendChild(this._viewElement);
         this.set('status', 'attached');
       },
@@ -150,12 +151,24 @@
       _loadElement: function() {
         this.set('status', 'loading');
         var link = this.importHref(this.elementHref, function(e) {
+          console.log(e);
+          console.log(link);
           this.set('status', 'loaded');
         }, function(error) {
           console.log('Failure to load ' + this.elementHref);
           this.set('status', 'failed');
         });
+      },
 
+      _computeElementTagName: function() {
+        var filenameRegex = /(?=([\w-]+)\.\w{3,4}$).+/;
+        var match;
+        if ((match = filenameRegex.exec(this.elementHref)) !== null) {
+          if (match.index === filenameRegex.lastIndex) {
+            filenameRegex.lastIndex++;
+          }
+        }
+        return match[1];
       }
 
     });
