@@ -3,19 +3,20 @@
     siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
     'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
 -->
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html"/>
 
 <dom-module id="px-view">
   <template>
     <!-- insert element here -->
   </template>
   <script>
+    'use strict';
+
     Polymer({
 
       is: 'px-view',
 
       properties: {
-
         /**
          *
          * Set the 'active' attribute on the <px-view> element to true and the components will be
