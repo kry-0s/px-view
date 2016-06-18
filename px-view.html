@@ -98,53 +98,78 @@
         },
 
         _importLink: {
-          type: Object
+          type: Object,
+          value: function() { return {} }
         }
 
       },
 
       observers: [
-        '_checkStatus(status, active, preload, elementHref, display, _elementTagName)'
+        '_checkStatus(status, active, preload, elementHref, display, _elementTagName)',
       ],
 
       _viewElement: null, // Reference to the loaded view DOM element
 
+      // when state is 'unloaded', if active or preload are true, start loading
+      _onUnloaded: function() {
+        if (this.active || this.preload) {
+          this._loadElement();
+        }
+      },
+
+      _onLoading: function() {
+        // do nothing
+      },
+
+      // when state is 'loaded', if active, attach element to DOM
+      _onLoaded: function() {
+        if (this.active) {
+          this._attachElement();
+        }
+      },
+
+      // when state is 'attached', if active, set status to 'shown', otherwise 'hidden'
+      _onAttached: function() {
+        var newStatus = this.active ? 'shown' : 'hidden';
+        this.set('status', newStatus);
+      },
+
+      // when state is 'shown', if active, set element display property
+      _onShown: function() {
+        if (this.active) {
+          this._viewElement.style.display = this.display;
+        } else {
+          this.set('status', 'hidden');
+        }
+      },
+
+      // when state is 'hidden', if active, set element display property to 'none'
+      _onHidden: function() {
+        if (!that.active) {
+          that._viewElement.style.display = 'none';
+        } else {
+          that.set('status', 'shown');
+        }
+      },
+
+      // _stateFunctions is an object literal with references to functions
+      // this maps state string values to state functions
+      _getStateFunction: function(status) {
+        var stateFunctions = {
+          'unloaded': this._onUnloaded,
+          'loading': this._onLoading,
+          'loaded': this._onLoaded,
+          'attached': this._onAttached,
+          'shown': this._onShown,
+          'hidden': this._onHidden
+        };
+        return stateFunctions[status];
+      },
+
       // 'unloaded' -> 'loading' -> 'loaded' || 'failed' -> 'attached' -> 'hidden' || 'shown'
       _checkStatus: function() {
-        switch (this.status) {
-          case 'unloaded':
-            if (this.active || this.preload) {
-              this._loadElement();
-            };
-            break;
-          case 'loading':
-            break;
-          case 'loaded':
-            if (this.active) {
-              this._attachElement();
-            };
-            break;
-          case 'attached':
-            var newStatus = this.active ? 'shown' : 'hidden';
-            this.set('status', newStatus);
-            break;
-          case 'shown':
-            if (this.active) {
-              this._viewElement.style.display = this.display;
-            } else {
-              this.set('status', 'hidden');
-            }
-            break;
-          case 'hidden':
-            if (!this.active) {
-              this._viewElement.style.display = 'none';
-            } else {
-              this.set('status', 'shown');
-            }
-            break;
-          default:
-            console.log('px-view status has entered unknown state: ', this.status);
-        }
+        // lookup state function and call it using fn.apply to maintain scope
+        this._getStateFunction(this.status).apply(this);
       },
 
       _attachElement: function() {
