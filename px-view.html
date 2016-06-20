@@ -145,10 +145,10 @@
 
       // when state is 'hidden', if active, set element display property to 'none'
       _onHidden: function() {
-        if (!that.active) {
-          that._viewElement.style.display = 'none';
+        if (!this.active) {
+          this._viewElement.style.display = 'none';
         } else {
-          that.set('status', 'shown');
+          this.set('status', 'shown');
         }
       },
 
