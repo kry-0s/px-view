@@ -176,7 +176,7 @@
         // confirm element tag name matches loaded element
         this._viewElement = document.createElement(this._elementTagName);
         this._viewElement.id = this._elementTagName + '-' + new Date().getTime();
-        this.appendChild(this._viewElement);
+        Polymer.dom(this.root).appendChild(this._viewElement);
         this.set('status', 'attached');
       },
 
