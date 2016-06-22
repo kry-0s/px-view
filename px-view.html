@@ -96,6 +96,20 @@
           type: String,
           value: "block"
         },
+        /**
+         *
+         * Data to be passd through to view when it is attached.
+         * Must be passed in as a stringified object using JSON.stringify()
+         *
+         * @attribute elementData
+         * @type Object
+         * @access public
+         * @default {}
+        */
+        elementData: {
+          type: Object,
+          value: function() { return {} }
+        },
 
         _importLink: {
           type: Object,
@@ -108,7 +122,7 @@
         '_checkStatus(status, active, preload, elementHref, display, _elementTagName)',
       ],
 
-      _viewElement: null, // Reference to the loaded view DOM element
+      _element: null, // Reference to the loaded view DOM element
 
       // when state is 'unloaded', if active or preload are true, start loading
       _onUnloaded: function() {
@@ -137,7 +151,7 @@
       // when state is 'shown', if active, set element display property
       _onShown: function() {
         if (this.active) {
-          this._viewElement.style.display = this.display;
+          this._element.style.display = this.display;
         } else {
           this.set('status', 'hidden');
         }
@@ -146,7 +160,7 @@
       // when state is 'hidden', if active, set element display property to 'none'
       _onHidden: function() {
         if (!this.active) {
-          this._viewElement.style.display = 'none';
+          this._element.style.display = 'none';
         } else {
           this.set('status', 'shown');
         }
@@ -174,9 +188,10 @@
 
       _attachElement: function() {
         // confirm element tag name matches loaded element
-        this._viewElement = document.createElement(this._elementTagName);
-        this._viewElement.id = this._elementTagName + '-' + new Date().getTime();
-        Polymer.dom(this.root).appendChild(this._viewElement);
+        this._element = document.createElement(this._elementTagName);
+        this._element.id = this._elementTagName + '-' + new Date().getTime();
+        this._element.setAttribute('element-data', JSON.stringify(this.elementData));
+        Polymer.dom(this.root).appendChild(this._element);
         this.set('status', 'attached');
       },
 
