@@ -11,8 +11,8 @@
   </template>
 
   <!-- include lodash utility library -->
-  <script src="/bower_components/lodash/dist/lodash.min.js"></script>
-
+  <script src="../lodash/dist/lodash.min.js"></script>
+  
   <script>
     'use strict';
 
@@ -192,8 +192,6 @@
       },
 
       _attachElement: function() {
-
-
         // confirm element tag name matches loaded element
         this._element = document.createElement(this._elementTagName);
         this._element.id = this._elementTagName + '-' + new Date().getTime();
@@ -253,7 +251,6 @@
           Polymer.dom(that.root).removeChild(node)
         });
       }
-
 
     });
   </script>
