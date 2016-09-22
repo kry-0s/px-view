@@ -1,21 +1,23 @@
 {
   "name": "px-view",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "main": [
     "px-view.html"
   ],
   "ignore": [
     ".*",
     "npm-debug.log",
-    "Gruntfile.js",
+    "gulpfile.js",
     "sass",
     "bower_components",
     "node_modules",
-    "test"
+    "test",
+    "wct.conf.*",
+    "package.json"
   ],
   "dependencies": {
-    "polymer": "~1.4.0",
-    "lodash": "^4.14.0"
+    "polymer": "~1.6.1",
+    "lodash": "^4.16.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#~v1.1.0"
