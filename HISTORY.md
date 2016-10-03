@@ -1,3 +1,11 @@
+v1.0.1
+==================
+* Fix defect where there was an assumtion that only one dom-module would be loaded per import. Broke the vulcanized of apps using this.
+
+v1.0.0
+==================
+* Remove dead sass files, css and build.
+
 v0.5.1
 ==================
 * Relative path import of lodash library

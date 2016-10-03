@@ -12,7 +12,7 @@
 
   <!-- include lodash utility library -->
   <script src="../lodash/dist/lodash.min.js"></script>
-  
+
   <script>
     'use strict';
 
@@ -113,12 +113,12 @@
         */
         elementData: {
           type: Object,
-          value: function() { return {} }
+          value: function() { return {}; }
         },
 
         _importLink: {
           type: Object,
-          value: function() { return {} }
+          value: function() { return {}; }
         }
 
       },
@@ -207,8 +207,8 @@
           if(_.isEmpty(that._importLink)) {
             that.set('status', 'loaded');
           } else {
-            var moduleId = that._importLink.import.querySelector('dom-module').id;
-            if(moduleId === that._elementTagName) {
+            var modulesLoaded = Polymer.dom(that._importLink.import).querySelectorAll('dom-module');
+            if(modulesLoaded.some(function(ele){return ele.id === that._elementTagName;})) {
               that.set('status', 'loaded');
             } else {
               console.log('Error: dom-module of imported element does not match element tag name');
@@ -235,7 +235,7 @@
         if(typeof previous !== 'undefined') {
           // polymer has changed the tagname, time to reset!
           this._resetView();
-        };
+        }
       },
 
       _resetView: function() {
@@ -248,7 +248,7 @@
         var nodes = Polymer.dom(this.root).children;
         var that = this;
         _.each(nodes, function(node) {
-          Polymer.dom(that.root).removeChild(node)
+          Polymer.dom(that.root).removeChild(node);
         });
       }
 
