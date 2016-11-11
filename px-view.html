@@ -136,6 +136,18 @@
         }
       },
 
+      _isElementRegistered: function(elementId) {
+        var list = Polymer.telemetry.registrations;
+        // Mimics Array#find
+        for (var i = 0, length = list.length; i < length; i++) {
+          var element = list[i];
+          if (element.is === elementId) {
+            return true;
+          }
+        }
+        return false;
+      },
+
       _onLoading: function() {
         // do nothing
       },
@@ -203,21 +215,27 @@
       _loadElement: function() {
         this.set('status', 'loading');
         var that = this;
-        this._importLink = this.importHref(this.elementHref, function(e) {
-          if(_.isEmpty(that._importLink)) {
-            that.set('status', 'loaded');
-          } else {
-            var modulesLoaded = Polymer.dom(that._importLink.import).querySelectorAll('dom-module');
-            if(modulesLoaded.some(function(ele){return ele.id === that._elementTagName;})) {
+
+        // check if this element is already registered, e.g. from a vulcanized bundle
+        if(this._isElementRegistered(this._elementTagName)){
+          that.set('status', 'loaded');
+        } else {
+          this._importLink = this.importHref(this.elementHref, function(e) {
+            if (_.isEmpty(that._importLink)) {
               that.set('status', 'loaded');
             } else {
-              console.log('Error: dom-module of imported element does not match element tag name');
-              that.set('status', 'failed');
+              var modulesLoaded = Polymer.dom(that._importLink.import).querySelectorAll('dom-module');
+              if (modulesLoaded.some(function(ele) {return ele.id === that._elementTagName;})) {
+                that.set('status', 'loaded');
+              } else {
+                console.log('Error: dom-module of imported element does not match element tag name');
+                that.set('status', 'failed');
+              }
             }
-          }
-        }, function(error) {
-          this.set('status', 'failed');
-        });
+          }, function(error) {
+            this.set('status', 'failed');
+          });
+        }
       },
 
       _computeElementTagName: function() {
