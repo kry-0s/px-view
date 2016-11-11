@@ -1,3 +1,7 @@
+v1.0.2
+==================
+* merged Pull Request that ensured the element imported doesn't already belong on the page.
+
 v1.0.1
 ==================
 * Fix defect where there was an assumtion that only one dom-module would be loaded per import. Broke the vulcanized of apps using this.
