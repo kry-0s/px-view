@@ -16,7 +16,7 @@
     "package.json"
   ],
   "dependencies": {
-    "polymer": "~1.6.1",
+    "polymer": "^1.7.0",
     "lodash": "^4.16.1"
   },
   "devDependencies": {
