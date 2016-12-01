@@ -62,7 +62,8 @@
           type: String,
           value: 'unloaded',
           notify: true,
-          reflectToAttribute: true
+          reflectToAttribute: true,
+          observer: '_statusChanged'
         },
         /**
          *
@@ -268,6 +269,12 @@
         _.each(nodes, function(node) {
           Polymer.dom(that.root).removeChild(node);
         });
+      },
+
+      _statusChanged: function() {
+        if (this._element) {
+          this.fire('view-status-changed', { status: this.status }, { node: this._element, bubbles: false });
+        }
       }
 
     });
