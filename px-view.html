@@ -271,6 +271,11 @@
         });
       },
 
+      /**
+       * Fired whenever the view status is changed.
+       * @event view-status-changed
+       * @param {String} {The view status}
+       */
       _statusChanged: function() {
         if (this._element) {
           this.fire('view-status-changed', { status: this.status }, { node: this._element, bubbles: false });
