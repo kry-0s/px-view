@@ -1,6 +1,6 @@
 {
     "name": "px-view",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "main": [
         "px-view.html"
     ],
@@ -16,8 +16,7 @@
         "package.json"
     ],
     "dependencies": {
-        "polymer": "^1.7.0",
-        "lodash": "^4.16.1"
+        "polymer": "^1.7.0"
     },
     "devDependencies": {
         "iron-component-page": "PolymerElements/iron-component-page#~v1.1.0"
