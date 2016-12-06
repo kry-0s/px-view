@@ -10,9 +10,6 @@
     <!-- insert element here -->
   </template>
 
-  <!-- include lodash utility library -->
-  <script src="../lodash/dist/lodash.min.js"></script>
-
   <script>
     'use strict';
 
@@ -222,7 +219,7 @@
           that.set('status', 'loaded');
         } else {
           this._importLink = this.importHref(this.elementHref, function(e) {
-            if (_.isEmpty(that._importLink)) {
+            if (Object.getOwnPropertyNames(that._importLink).length == 0) {
               that.set('status', 'loaded');
             } else {
               var modulesLoaded = Polymer.dom(that._importLink.import).querySelectorAll('dom-module');
@@ -266,9 +263,12 @@
       _removeAllElements: function() {
         var nodes = Polymer.dom(this.root).children;
         var that = this;
-        _.each(nodes, function(node) {
-          Polymer.dom(that.root).removeChild(node);
-        });
+
+        nodes.forEach(
+          function(node) {
+            Polymer.dom(that.root).removeChild(node);
+          }
+        );
       },
 
       /**
