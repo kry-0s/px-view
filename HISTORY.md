@@ -1,3 +1,7 @@
+v1.1.0
+==================
+* Merge PR that added a 'px-view-state-changed' event
+
 v1.0.5
 ==================
 * changing all devDeps to ^
