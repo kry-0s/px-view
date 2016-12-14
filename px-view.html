@@ -59,7 +59,8 @@
           type: String,
           value: 'unloaded',
           notify: true,
-          reflectToAttribute: true
+          reflectToAttribute: true,
+          observer: '_statusChanged'
         },
         /**
          *
@@ -262,11 +263,23 @@
       _removeAllElements: function() {
         var nodes = Polymer.dom(this.root).children;
         var that = this;
+
         nodes.forEach(
           function(node) {
             Polymer.dom(that.root).removeChild(node);
           }
         );
+      },
+
+      /**
+       * Fired whenever the view status is changed.
+       * @event view-status-changed
+       * @param {String} {The view status}
+       */
+      _statusChanged: function() {
+        if (this._element) {
+          this.fire('px-view-status-changed', { status: this.status }, { node: this._element, bubbles: false });
+        }
       }
 
     });
