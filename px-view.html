@@ -45,6 +45,19 @@
           type: Boolean,
           value: false
         },
+        
+        /**
+         *
+         * Set to true to load this view asynchronously.
+         *
+         * @attribute loadAsync
+         * @type Boolean
+         * @default false
+        */
+        loadAsync: {
+          type: Boolean,
+          value: false
+        },
         /**
          *
          * Status tracks a px-view component over it's lifecycle
@@ -232,7 +245,7 @@
             }
           }, function(error) {
             this.set('status', 'failed');
-          });
+          }, this.loadAsync);
         }
       },
 
