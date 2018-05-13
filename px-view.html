@@ -236,7 +236,7 @@
               that.set('status', 'loaded');
             } else {
               var modulesLoaded = Polymer.dom(that._importLink.import).querySelectorAll('dom-module');
-              if (modulesLoaded.some(function(ele) {return ele.id === that._elementTagName;})) {
+              if (Array.prototype.some.call(modulesLoaded, function(ele) {return ele.id === that._elementTagName;})) {
                 that.set('status', 'loaded');
               } else {
                 console.log('Error: dom-module of imported element does not match element tag name');
