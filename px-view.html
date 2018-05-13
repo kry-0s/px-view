@@ -274,7 +274,7 @@
       },
 
       _removeAllElements: function() {
-        var nodes = Polymer.dom(this.root).children;
+        var nodes = Polymer.dom(this.root);
         var that = this;
 
         Array.prototype.forEach.call(nodes.children, node => {
