@@ -277,11 +277,9 @@
         var nodes = Polymer.dom(this.root).children;
         var that = this;
 
-        nodes.forEach(
-          function(node) {
-            Polymer.dom(that.root).removeChild(node);
-          }
-        );
+        Array.prototype.forEach.call(nodes.children, node => {
+          Polymer.dom(that.root).removeChild(node);
+        });
       },
 
       /**
